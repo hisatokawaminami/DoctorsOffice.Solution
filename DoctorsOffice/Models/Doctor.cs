@@ -44,6 +44,23 @@ namespace DoctorsOffice.Models
     {
       return _specialty;
     }
+
+    public static void DeleteAll()
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"DELETE FROM doctors;";
+
+      cmd.ExecuteNonQuery();
+
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
+    }
     public void Save()
     {
       MySqlConnection conn = DB.Connection();
@@ -57,8 +74,8 @@ namespace DoctorsOffice.Models
       name.Value = this._name;
       cmd.Parameters.Add(name);
 
-      MySqlParameter name = new MySqlParameter();
-      specialty.ParameterSpecialty = "@specialty";
+      MySqlParameter specialty = new MySqlParameter();
+      specialty.ParameterName = "@specialty";
       specialty.Value = this._specialty;
       cmd.Parameters.Add(specialty);
 
@@ -76,22 +93,22 @@ namespace DoctorsOffice.Models
       MySqlConnection conn = DB.Connection();
       conn.Open();
       var cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"SELECT FROM doctors;";
+      cmd.CommandText = @"SELECT * FROM doctors;";
       var rdr = cmd.ExecuteReader() as MySqlDataReader;
-      while(rdr.READ())
+      while(rdr.Read())
       {
         int DoctorId = rdr.GetInt32(0);
         string DoctorName = rdr.GetString(1);
         string DoctorSpecialty = rdr.GetString(2);
         Doctor newDoctor = new Doctor(DoctorName, DoctorSpecialty, DoctorId);
-        allDcotors.Add(newDoctor);
+        allDoctors.Add(newDoctor);
       }
       conn.Close();
       if (conn != null)
       {
         conn.Dispose();
       }
-      return allDcotors;
+      return allDoctors;
     }
   }
 }
