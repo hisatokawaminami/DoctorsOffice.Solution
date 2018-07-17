@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jul 17, 2018 at 11:05 PM
+-- Generation Time: Jul 18, 2018 at 01:34 AM
 -- Server version: 5.6.35
 -- PHP Version: 7.0.15
 
@@ -37,6 +37,18 @@ CREATE TABLE `doctors` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `doctors_patients`
+--
+
+CREATE TABLE `doctors_patients` (
+  `id` int(11) NOT NULL,
+  `doctors_id` int(11) NOT NULL,
+  `patient_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `patients`
 --
 
@@ -57,6 +69,12 @@ ALTER TABLE `doctors`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `doctors_patients`
+--
+ALTER TABLE `doctors_patients`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `patients`
 --
 ALTER TABLE `patients`
@@ -70,7 +88,12 @@ ALTER TABLE `patients`
 -- AUTO_INCREMENT for table `doctors`
 --
 ALTER TABLE `doctors`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `doctors_patients`
+--
+ALTER TABLE `doctors_patients`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `patients`
 --
