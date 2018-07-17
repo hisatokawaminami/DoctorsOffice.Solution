@@ -9,34 +9,23 @@ namespace DoctorsOffice.Models
   {
     private int _id;
     private string _name;
-    private int _birthday;
+    private DateTime _birthday;
 
-    public Patient (string Name, int Birthday, int Id = 0)
+    public Patient(string Name, DateTime Birthday, int Id = 0)
     {
       _id = Id;
       _name = Name;
       _birthday = Birthday;
     }
 
-    public override bool Equals(System.Object otherPatient)
+    public Patient(string Name, int year = 0, int month = 0, int day = 0, int Id = 0)
     {
-      if (!(otherPatient is Patient))
-      {
-        return false;
-      }
-      else
-      {
-        Patient newPatient = (Patient) otherPatient;
-        bool idEquality = (this.GetId() == newPatient.GetId());
-        bool nameEquality = (this.GetName() == newPatient.GetName());
-        bool birthdayEquality = (this.GetBirthday() == newPatient.GetBirthday());
-        return (idEquality && nameEquality);
-      }
+      _id = Id;
+      _name = Name;
+      _birthday = new DateTime(year,month,day);
     }
-    public override int GetHashCode()
-    {
-      return this.GetName().GetHashCode();
-    }
+
+
     public int GetId()
     {
       return _id;
@@ -45,7 +34,7 @@ namespace DoctorsOffice.Models
     {
       return _name;
     }
-    public int GetBirthday()
+    public DateTime GetBirthday()
     {
       return _birthday;
     }
@@ -109,12 +98,12 @@ namespace DoctorsOffice.Models
         {
           PatientName = rdr.GetString(1);
         }
-        int PatientBirthday = 0;
+        DateTime PatientBirthday = new DateTime(2);
         if(!rdr.IsDBNull(2))
         {
-          PatientBirthday = rdr.GetInt32(2);
+          PatientBirthday = rdr.GetDateTime(2);
         }
-        Patient newPatient = new Patient(PatientName, PatientBirthday, PatientId);
+        Patient newPatient = new Patient(PatientName, PatientBirthday.Date, PatientId);
         allPatients.Add(newPatient);
       }
       conn.Close();
@@ -141,13 +130,13 @@ namespace DoctorsOffice.Models
 
       int PatientId = 0;
       string PatientName = "";
-      int PatientBirthday = 0;
+      DateTime PatientBirthday = new DateTime(1);
 
       while(rdr.Read())
       {
         PatientId = rdr.GetInt32(0);
         PatientName = rdr.GetString(1);
-        PatientBirthday = rdr.GetInt32(2);
+        PatientBirthday = rdr.GetDateTime(2);
       }
 
       Patient foundPatient = new Patient(PatientName, PatientBirthday, PatientId);
@@ -158,6 +147,26 @@ namespace DoctorsOffice.Models
         conn.Dispose();
       }
       return foundPatient;
+    }
+
+    public override bool Equals(System.Object otherPatient)
+    {
+      if (!(otherPatient is Patient))
+      {
+        return false;
+      }
+      else
+      {
+        Patient newPatient = (Patient) otherPatient;
+        bool idEquality = (this.GetId() == newPatient.GetId());
+        bool nameEquality = (this.GetName() == newPatient.GetName());
+        bool birthdayEquality = (this.GetBirthday() == newPatient.GetBirthday());
+        return (idEquality && nameEquality);
+      }
+    }
+    public override int GetHashCode()
+    {
+      return this.GetName().GetHashCode();
     }
   }
 }
