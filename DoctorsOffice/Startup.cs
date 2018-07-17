@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DoctorOffice
+namespace DoctorsOffice
 {
   public class Startup
   {
@@ -34,13 +34,13 @@ namespace DoctorOffice
         });
         app.Run(async (context) =>
         {
-          await context.Response.WriteAsync("Hello World!");
+          await context.Response.WriteAsync("error");
           });
         }
 
       }
       public static class DBConfiguration
       {
-        public static string ConnectionString = "server=localhost; user id=root;password=root;port=8889;database=to_do;";
+        public static string ConnectionString = "server=localhost; user id=root;password=root;port=8889;database=doctors_office;";
       }
 }
