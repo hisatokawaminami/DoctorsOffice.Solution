@@ -56,7 +56,7 @@ namespace DoctorsOffice.Tests
     }
 
     [TestMethod]
-    public void Save_DatabaseAssignIdToCategory_id()
+    public void Save_DatabaseAssignIdToDoctor_id()
     {
       //Arrange
       Doctor testDoctor = new Doctor("Hisato", "Cardiology");
@@ -70,6 +70,20 @@ namespace DoctorsOffice.Tests
 
       //Assert
       Assert.AreEqual(result, testId);
+    }
+
+    [TestMethod]
+    public void Find_DoctorById()
+    {
+      //Arrange
+      Doctor testDoctor = new Doctor("Hisato", "Cardiology");
+      testDoctor.Save();
+      
+      //act
+      Doctor foundDoctor = Doctor.Find(testDoctor.GetId());
+
+      //Arrange
+      Assert.AreEqual(testDoctor, foundDoctor);
     }
   }
 }
