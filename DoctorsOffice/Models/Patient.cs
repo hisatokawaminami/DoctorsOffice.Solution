@@ -38,6 +38,26 @@ namespace DoctorsOffice.Models
     {
       return _birthday;
     }
+    public void Delete()
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"DELETE FROM patients WHERE id = @PatientId; DELETE FROM doctors_patients WHERE patient_id = @PatientId;";
+
+      MySqlParameter patientIdParameter = new MySqlParameter();
+      patientIdParameter.ParameterName = "@PatientId";
+      patientIdParameter.Value = this.GetId();
+      cmd.Parameters.Add(patientIdParameter);
+
+      cmd.ExecuteNonQuery();
+
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
+    }
 
     public static void DeleteAll()
     {

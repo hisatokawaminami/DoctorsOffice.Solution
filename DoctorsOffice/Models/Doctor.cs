@@ -142,5 +142,36 @@ namespace DoctorsOffice.Models
       }
       return newDoctor;
     }
+    public List<Patient> GetPatients()
+    {
+      MySqlConnection conn =DB.Connection();
+      conn.Open();
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"SELECT patients.* FROM doctors JOIN doctors_patients ON (doctors.id = doctors_patients.doctor_id) JOIN patients ON (doctors_patients.patient_id = patients.id) WHERE doctors.id = @DoctorId;";
+
+      MySqlParameter doctorIdParameter = new MySqlParameter();
+      doctorIdParameter.ParameterName = "@DoctorId";
+      doctorIdParameter.Value = _id;
+      cmd.Parameters.Add(doctorIdParameter);
+
+      MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+      List<Patient> patients = new List<Patient>{};
+
+      while(rdr.Read())
+      {
+        int patientId = rdr.GetInt32(0);
+        string patientName = rdr.GetString(1);
+        DateTime patientBirthday = rdr.GetDateTime(2);
+        Patient newPatient = new Patient(patientName, patientBirthday, patientId);
+        patients.Add(newPatient);
+      }
+
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
+      return patients;
+    }
   }
 }

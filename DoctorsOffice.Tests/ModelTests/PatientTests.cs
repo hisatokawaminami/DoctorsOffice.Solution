@@ -114,5 +114,28 @@ namespace DoctorsOffice.Tests
       //Assert
       CollectionAssert.AreEqual(testList, result);
     }
+    [TestMethod]
+    public void Delete_DeletesPatientAssociationFromDatabase_PatientList()
+    {
+      //Arrange
+      Doctor testDoctor = new Doctor ("Bono", "cancer");
+      testDoctor.Save();
+
+      string testName = "Yoko";
+      DateTime testBirthday = new DateTime(1991,06,06);
+      Patient testPatient = new Patient(testName, testBirthday);
+      testPatient.Save();
+
+      //Act
+      testPatient.AddDoctor(testDoctor);
+      testPatient.Delete();
+
+      List<Patient> resultDoctorPatients = testDoctor.GetPatients();
+      List<Patient> testDoctorPatients = new List<Patient> {};
+
+      //Assert
+      CollectionAssert.AreEqual(testDoctorPatients, resultDoctorPatients);
+
+    }
   }
 }
