@@ -72,5 +72,47 @@ namespace DoctorsOffice.Tests
       //Assert
       CollectionAssert.AreEqual(testList, test2List);
     }
+    [TestMethod]
+    public void  AddDoctor_AddsDoctorToPatient_DoctorList()
+    {
+      //Arrange
+      DateTime testBirthday = new DateTime(1991,06,06);
+      Patient testPatient = new Patient("Yoko", testBirthday);
+      testPatient.Save();
+
+      Doctor testDoctor = new Doctor("Jon", "Allergy");
+      testDoctor.Save();
+
+      //Act
+      testPatient.AddDoctor(testDoctor);
+
+      List<Doctor> result = testPatient.GetDoctors();
+      List<Doctor> testList = new List<Doctor>{testDoctor};
+
+      //Assert
+      CollectionAssert.AreEqual(testList, result);
+    }
+    [TestMethod]
+    public void GetDoctors_ReturnsAllPatientDoctors_DoctorList()
+    {
+      //Arrange
+      DateTime testBirthday = new DateTime(1991,06,06);
+      Patient testPatient = new Patient("Yoko", testBirthday);
+      testPatient.Save();
+
+      Doctor testDoctor1 = new Doctor("Bono", "cancer" );
+      testDoctor1.Save();
+
+      Doctor testDoctor2 = new Doctor("Lemon", "optical");
+      testDoctor2.Save();
+
+      //Act
+      testPatient.AddDoctor(testDoctor1);
+      List<Doctor> result = testPatient.GetDoctors();
+      List<Doctor> testList = new List<Doctor> {testDoctor1};
+
+      //Assert
+      CollectionAssert.AreEqual(testList, result);
+    }
   }
 }

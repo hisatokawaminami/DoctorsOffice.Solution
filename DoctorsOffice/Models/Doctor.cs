@@ -142,6 +142,5 @@ namespace DoctorsOffice.Models
       }
       return newDoctor;
     }
-
   }
 }

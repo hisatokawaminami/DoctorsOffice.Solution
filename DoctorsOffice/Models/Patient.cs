@@ -148,6 +148,83 @@ namespace DoctorsOffice.Models
       }
       return foundPatient;
     }
+    public void AddDoctor(Doctor newDoctor)
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"INSERT INTO doctors_patients (doctor_id, patient_id) VALUES (@DoctorId, @PatientId);";
+
+      MySqlParameter doctor_id = new MySqlParameter();
+      doctor_id.ParameterName = "@DoctorId";
+      doctor_id.Value = newDoctor.GetId();
+      cmd.Parameters.Add(doctor_id);
+
+      MySqlParameter patient_id = new MySqlParameter();
+      patient_id.ParameterName = "@PatientId";
+      patient_id.Value = _id;
+      cmd.Parameters.Add(patient_id);
+
+      cmd.ExecuteNonQuery();
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
+
+    }
+    public List<Doctor> GetDoctors()
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"SELECT doctor_id FROM doctors_patients WHERE patient_id = @patientId;";
+      //paticular reason to have small p in patientId?
+
+      MySqlParameter patientIdParameter = new MySqlParameter();
+      patientIdParameter.ParameterName = "@patientId";
+      patientIdParameter.Value = _id;
+      cmd.Parameters.Add(patientIdParameter);
+
+      var rdr = cmd.ExecuteReader() as MySqlDataReader;
+
+      List<int> doctorsIds = new List<int> {};
+      while(rdr.Read())
+      {
+        int doctorsId = rdr.GetInt32(0);
+        doctorsIds.Add(doctorsId);
+      }
+      rdr.Dispose();
+
+      List<Doctor> doctors = new List<Doctor> {};
+      foreach (int doctorsId in doctorsIds)
+      {
+        var doctorQuery = conn.CreateCommand() as MySqlCommand;
+        doctorQuery.CommandText = @"SELECT * FROM doctors WHERE id = @DoctorId;";
+
+        MySqlParameter doctorIdParameter = new MySqlParameter();
+        doctorIdParameter.ParameterName = "@DoctorId";
+        doctorIdParameter.Value = doctorsId;
+        doctorQuery.Parameters.Add(doctorIdParameter);
+
+        var doctorQueryRdr = doctorQuery.ExecuteReader() as MySqlDataReader;
+        while(doctorQueryRdr.Read())
+        {
+          int thisDoctorId = doctorQueryRdr.GetInt32(0);
+          string doctorName = doctorQueryRdr.GetString(1);
+          string doctorSpecialty = doctorQueryRdr.GetString(2);
+          Doctor foundDoctor = new Doctor(doctorName, doctorSpecialty, thisDoctorId);
+          doctors.Add(foundDoctor);
+        }
+        doctorQueryRdr.Dispose();
+      }
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
+      return doctors;
+    }
 
     public override bool Equals(System.Object otherPatient)
     {
